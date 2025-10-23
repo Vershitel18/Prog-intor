@@ -3,7 +3,8 @@ package markup;
 import java.util.List;
 
 public abstract class toMarkdown implements ToMarkup{
-    List<markup> listValue;
+    protected List<markup> listValue;
+
     public toMarkdown(List<markup> listValue) {
         this.listValue = listValue;
     }
