@@ -3,18 +3,18 @@ import markup.Text;
 
 import java.util.List;
 
-public class Strikeout extends Paragraph implements markup{
+public class Strikeout extends toMarkdown{
 
-    public Strikeout(List<markup> textList) {
-        super(textList);
+    public Strikeout(List<markup> listValue) {
+        super(listValue);
     }
 
     @Override
-    public void toMarkdown(StringBuilder sb) {
-        sb.append("~");
-        for (markup value: textList) {
-            value.toMarkdown(sb);
-        }
-        sb.append("~");
+    protected String getOperandMarkdownFromChild() {
+        return "~";
+    }
+    @Override
+    protected String getOperandTexFromChild() {
+        return "\\textst";
     }
 }

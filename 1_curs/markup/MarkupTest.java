@@ -20,6 +20,8 @@ public final class MarkupTest {
 
     public static final Selector SELECTOR = new Selector(MarkupTest.class)
             .variant("Base", MARKDOWN)
+            .variant("3637", MARKDOWN)
+            .variant("3839", MARKDOWN)
             ;
 
     public static Consumer<TestCounter> variant(final String name, final Map<String, String> mapping) {

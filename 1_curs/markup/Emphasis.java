@@ -1,18 +1,20 @@
 package markup;
 import java.util.List;
 
-public class Emphasis extends Paragraph implements markup{
+public class Emphasis extends toMarkdown implements markup{
 
-    public Emphasis(List<markup> textList) {
-        super(textList);
+    public Emphasis(List<markup> listValue) {
+        super(listValue);
     }
 
     @Override
-    public void toMarkdown(StringBuilder sb) {
-        sb.append("*");
-        for (markup value: textList) {
-            value.toMarkdown(sb);
-        }
-        sb.append("*");
+    protected String getOperandMarkdownFromChild() {
+        return "*";
     }
+
+    @Override
+    protected String getOperandTexFromChild() {
+        return "emph";
+    }
+
 }

@@ -55,7 +55,7 @@ public class myNewScanner implements AutoCloseable {
                 }
                 if (isSeparator) {
                     pushBackChar = ' ';
-                    return null;
+                    return "\n";
                 }
             }
             if (isWordChar.test((char)ch)) {

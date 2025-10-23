@@ -2,18 +2,19 @@ package markup;
 
 import java.util.List;
 
-public class Strong extends Paragraph implements markup{
+public class Strong extends toMarkdown{
 
-    public Strong(List<markup> textList) {
-        super(textList);
+    public Strong(List<markup> listValue) {
+        super(listValue);
     }
 
     @Override
-    public void toMarkdown(StringBuilder sb) {
-        sb.append("__");
-        for (markup value: textList) {
-            value.toMarkdown(sb);
-        }
-        sb.append("__");
+    protected String getOperandMarkdownFromChild() {
+        return "__";
+    }
+
+    @Override
+    protected String getOperandTexFromChild() {
+        return "\\textbf";
     }
 }
