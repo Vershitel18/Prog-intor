@@ -1,9 +1,9 @@
 package markup;
 import java.util.List;
 
-public class Emphasis extends toMarkdown implements markup{
+public class Emphasis extends ToMarkdown {
 
-    public Emphasis(List<markup> listValue) {
+    public Emphasis(List<ToMarkup> listValue) {
         super(listValue);
     }
 
@@ -13,8 +13,8 @@ public class Emphasis extends toMarkdown implements markup{
     }
 
     @Override
-    protected String getOperandTexFromChild() {
-        return "emph";
+    protected String getOperandHtmlFromChild() {
+        return "em";
     }
 
 }

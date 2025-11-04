@@ -1,5 +1,3 @@
-import WordStatPlusPlus.myNewScanner;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -10,7 +8,6 @@ public class Wspp {
             String inputFile = args[0];
             String outputFile = args[1];
             try {
-                // Ввод и обработка данных
                 myNewScanner in = new myNewScanner(
                         new FileInputStream(inputFile),
                         c -> ((Character.isLetter(c) || Character.getType(c) == Character.DASH_PUNCTUATION || c == '\'')));
@@ -24,7 +21,6 @@ public class Wspp {
                             wordStat.computeIfAbsent(word.toLowerCase(), k-> new ArrayList<>()).add(count);
                         }
                     }
-                    // Вывод данных в outputFile
                     BufferedWriter out = new BufferedWriter(
                             new OutputStreamWriter(
                                     new FileOutputStream(outputFile), StandardCharsets.UTF_8)
@@ -40,6 +36,10 @@ public class Wspp {
                             }
                             out.newLine();
                         }
+                    } catch (FileNotFoundException e) {
+                        System.out.println("File not found:" + e.getMessage());
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
                     } finally {
                         out.close();
                     }

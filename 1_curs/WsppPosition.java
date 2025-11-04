@@ -1,11 +1,8 @@
-import WordStatPlusPlus.myNewScanner;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class WsppPosition {
-
     public static void main(String[] args) {
         try {
             String inputFile = args[0];
@@ -44,13 +41,13 @@ public class WsppPosition {
                         try {
                             for (String key : entries) {
                                 out.write(key);
-                                ArrayList<Integer> list = wordStat.get(key);
+                                List<Integer> list = wordStat.get(key);
                                 int counter;
                                 out.write(' ');
                                 out.write(String.valueOf(wordStat.get(key).size() / 2));
                                 for (int i = 0; i < list.size(); i += 2) {
                                     out.write(' ');
-                                    out.write(list.get(i).toString());
+                                    out.write(String.valueOf(list.get(i)));
                                     out.write(':');
                                     counter = wordInLine - list.get(i + 1) + 1;
                                     out.write(String.valueOf(counter));
@@ -69,8 +66,9 @@ public class WsppPosition {
                     } finally {
                         out.close();
                     }
-                }
-                finally {
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("IndexOutOfBoundsException:" + e.getMessage());
+                } finally {
                     in.close();
                 }
             } catch (FileNotFoundException e) {

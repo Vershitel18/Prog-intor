@@ -2,25 +2,25 @@ package markup;
 
 import java.util.List;
 
-public class Paragraph implements markup, toTex{
+public class Paragraph implements Markdown, ToHtml {
 
-    List<markup> textList;
-    public Paragraph(List<markup> textList) {
+    List<ToMarkup> textList;
+    public Paragraph(List<ToMarkup> textList) {
         this.textList = textList;
     }
 
     public void toMarkdown(StringBuilder sb) {
-        for (markup value: textList) {
+        for (ToMarkup value: textList) {
             value.toMarkdown(sb);
         }
     }
 
     @Override
-    public void toTex(StringBuilder sb) {
-        sb.append("\\par{");
-        for (markup value: textList) {
-            value.toMarkdown(sb);
+    public void toHtml(StringBuilder sb) {
+        sb.append("<p>");
+        for (ToMarkup value: textList) {
+            value.toHtml(sb);
         }
-        sb.append("}");
+        sb.append("</p>");
     }
 }

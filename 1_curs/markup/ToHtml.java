@@ -1,5 +1,5 @@
 package markup;
 
-public interface toHtml {
+public interface ToHtml {
     void toHtml(StringBuilder sb);
 }

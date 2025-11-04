@@ -1,11 +1,10 @@
 package markup;
-import markup.Text;
 
 import java.util.List;
 
-public class Strikeout extends toMarkdown{
+public class Strikeout extends ToMarkdown {
 
-    public Strikeout(List<markup> listValue) {
+    public Strikeout(List<ToMarkup> listValue) {
         super(listValue);
     }
 
@@ -14,7 +13,7 @@ public class Strikeout extends toMarkdown{
         return "~";
     }
     @Override
-    protected String getOperandTexFromChild() {
-        return "\\textst";
+    protected String getOperandHtmlFromChild() {
+        return "s";
     }
 }

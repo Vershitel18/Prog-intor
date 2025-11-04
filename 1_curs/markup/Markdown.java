@@ -1,5 +1,5 @@
 package markup;
 
-public interface markup {
+public interface Markdown {
      void toMarkdown(StringBuilder sb);
 }

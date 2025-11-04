@@ -2,9 +2,9 @@ package markup;
 
 import java.util.List;
 
-public class Strong extends toMarkdown{
+public class Strong extends ToMarkdown {
 
-    public Strong(List<markup> listValue) {
+    public Strong(List<ToMarkup> listValue) {
         super(listValue);
     }
 
@@ -14,7 +14,7 @@ public class Strong extends toMarkdown{
     }
 
     @Override
-    protected String getOperandTexFromChild() {
-        return "\\textbf";
+    protected String getOperandHtmlFromChild() {
+        return "strong";
     }
 }

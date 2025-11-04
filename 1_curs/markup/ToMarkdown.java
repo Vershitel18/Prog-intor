@@ -2,35 +2,38 @@ package markup;
 
 import java.util.List;
 
-public abstract class toMarkdown implements ToMarkup{
-    protected List<markup> listValue;
+public abstract class ToMarkdown implements ToMarkup{
+    protected List<ToMarkup> listValue;
 
-    public toMarkdown(List<markup> listValue) {
+    public ToMarkdown(List<ToMarkup> listValue) {
         this.listValue = listValue;
     }
 
     @Override
     public void toMarkdown(StringBuilder sb) {
-        String operandMardown = getOperandMarkdownFromChild();
-        sb.append(operandMardown);
-        for (markup value: listValue) {
+        String operandMarkdown = getOperandMarkdownFromChild();
+        sb.append(operandMarkdown);
+        for (ToMarkup value: listValue) {
             value.toMarkdown(sb);
         }
-        sb.append(operandMardown);
+        sb.append(operandMarkdown);
     }
 
     protected abstract String getOperandMarkdownFromChild();
-    protected abstract String getOperandTexFromChild();
+    protected abstract String getOperandHtmlFromChild();
 
     @Override
-    public void toTex(StringBuilder sb) {
-        String operandTex = getOperandTexFromChild();
+    public void toHtml(StringBuilder sb) {
+        String operandTex = getOperandHtmlFromChild();
+        sb.append("<");
         sb.append(operandTex);
-        sb.append("{");
-        for (markup value: listValue) {
-            value.toMarkdown(sb);
+        sb.append(">");
+        for (ToMarkup value: listValue) {
+            value.toHtml(sb);
         }
-        sb.append("}");
+        sb.append("</");
+        sb.append(operandTex);
+        sb.append(">");
     }
 
 }

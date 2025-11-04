@@ -12,7 +12,7 @@ public class Text implements ToMarkup{
     }
 
     @Override
-    public void toTex(StringBuilder sb) {
+    public void toHtml(StringBuilder sb) {
         sb.append(text);
     }
 }

@@ -18,5 +18,8 @@ public class Main {
                         new Text("6")
                 ))
         ));
+        StringBuilder sn = new StringBuilder();
+        paragraph.toMarkdown(sn);
+        System.out.println(sn);
     }
 }

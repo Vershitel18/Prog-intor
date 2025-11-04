@@ -18,10 +18,18 @@ public final class MarkupTest {
             )
     );
 
+    private static final Consumer<TestCounter> HTML = MarkupTest.variant(
+            "Html", Map.of(
+                    "&[", "<p>", "&]", "</p>",
+                    "*<", "<em>", "*>", "</em>",
+                    "__<", "<strong>", "__>", "</strong>",
+                    "~<", "<s>", "~>", "</s>"
+            )
+    );
+
     public static final Selector SELECTOR = new Selector(MarkupTest.class)
             .variant("Base", MARKDOWN)
-            .variant("3637", MARKDOWN)
-            .variant("3839", MARKDOWN)
+            .variant("3435", HTML)
             ;
 
     public static Consumer<TestCounter> variant(final String name, final Map<String, String> mapping) {
