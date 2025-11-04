@@ -2,20 +2,20 @@ package markup;
 
 import java.util.List;
 
-public class Emphasis extends ToMarkdown {
+public class Example extends ToMarkdown {
 
-    public Emphasis(List<ToMarkup> listValue) {
+    public Example(List<ToMarkup> listValue) {
         super(listValue);
     }
 
     @Override
     protected String getOperandMarkdownFromChild() {
-        return "*";
+        return "!";
     }
 
     @Override
     protected String getOperandHtmlFromChild() {
-        return "em";
+        return "samp";
     }
 
 }

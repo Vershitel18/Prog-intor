@@ -1,12 +1,20 @@
+package Reverse;
+
+import md2html.myNewScanner;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Reverse {
+import static java.lang.Math.max;
+
+public class ReverseRotate {
     public static void main(String[] args) {
-        try ( myNewScanner scannerLines = new myNewScanner(System.in, c -> (Character.isDigit(c) || c == '-'));) {
+        try (myNewScanner scannerLines = new myNewScanner(System.in, c -> (Character.isDigit(c) || c=='-'));) {
             int[][] array = new int[1][];
             int[] values = new int[1];
             int lineCount = 0;
+            int maxValues = 0;
             try {
                 while (scannerLines.hasNext()) {
                     if (array.length == lineCount) {
@@ -22,6 +30,7 @@ public class Reverse {
                         array[lineCount][elementCount] = Integer.parseInt(numbers);
                         elementCount++;
                     }
+                    maxValues = max(maxValues, elementCount);
                     if (lineCount == values.length) {
                         values = Arrays.copyOf(values, values.length * 2);
                     }
@@ -31,14 +40,22 @@ public class Reverse {
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
-            for (int i = lineCount - 2; i >= 0; i--) {
+            ArrayList<StringBuilder> List = new ArrayList<>(maxValues);
+            for (int i = 0; i < maxValues; i++) {
+                List.add(new StringBuilder());
+            }
+
+            for (int i = lineCount - 1; i >= 0; i--) {
                 for (int j = values[i] - 1; j >= 0; j--) {
-                    System.out.print(array[i][j] + " ");
+                    List.get(j).append(array[i][j]);
+                    List.get(j).append(" ");
                 }
-                System.out.println();
+            }
+            for (StringBuilder i : List) {
+                System.out.println(i);
             }
         } catch (IOException e) {
-            System.out.println(e.getLocalizedMessage());
+            System.out.println(e.getMessage());
         }
     }
 

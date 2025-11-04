@@ -7,6 +7,7 @@ public class Main {
         Paragraph paragraph = new Paragraph(List.of(
                 new Strong(List.of(
                         new Text("1"),
+                        new Code(List.of(new Text("CODE"))),
                         new Strikeout(List.of(
                                 new Text("2"),
                                 new Emphasis(List.of(

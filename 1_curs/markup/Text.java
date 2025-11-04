@@ -13,6 +13,10 @@ public class Text implements ToMarkup{
 
     @Override
     public void toHtml(StringBuilder sb) {
-        sb.append(text);
+        String s = text
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
+        sb.append(s);
     }
 }

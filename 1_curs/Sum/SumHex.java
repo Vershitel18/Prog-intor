@@ -1,3 +1,5 @@
+package Sum;
+
 public class SumHex {
     public static void main(String[] args) {
         int answer = 0;

@@ -1,3 +1,5 @@
+package WordStat;
+
 import java.io.*;
 import java.util.*;
 
