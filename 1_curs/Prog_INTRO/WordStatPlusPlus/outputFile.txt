@@ -1,0 +1,4 @@
+line 1:5
+word 1:4 2:2
+stot 2:3
+hello 2:1
