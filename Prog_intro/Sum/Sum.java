@@ -1,4 +1,4 @@
-package Sum;
+package Prog_INTRO.Reverse.Sum;
 
 public class Sum {
     public static void main(String[] args) {

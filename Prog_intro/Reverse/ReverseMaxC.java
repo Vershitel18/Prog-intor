@@ -1,4 +1,4 @@
-package Reverse;
+package Prog_INTRO.Reverse;
 
 import java.util.Arrays;
 import java.util.Scanner;
