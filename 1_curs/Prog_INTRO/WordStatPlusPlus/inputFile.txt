@@ -1,2 +1,0 @@
-line word
-stot word hello
