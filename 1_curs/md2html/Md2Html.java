@@ -1,76 +1,61 @@
 package md2html;
+
 import markup.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Md2Html {
-    private static HashMap<Character, String> htmlTegs = new HashMap<>() {{
-        put('*', "em");
-        put('_', "em");
-        put('-', "so");
-        put('`', "c");
-        put('!', "te");
-    }};
+    private static final Set<Character> HTML_TAGS = Set.of('*', '_','-', '`', '!');
 
     public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Argument error");
+            return;
+        }
         String inputFile = args[0];
         String outputFile = args[1];
+
+        // :NOTE: можно использовать buffered reader
         try (Scanner scanner = new Scanner(new File(inputFile), StandardCharsets.UTF_8)) {
-            StringBuilder paragraph = new StringBuilder();
-            StringBuilder output = new StringBuilder();
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.isEmpty() && !paragraph.isEmpty()) {
-                    output.append(Md2Html(paragraph)).append(System.lineSeparator());
-                    paragraph.setLength(0);
-                } else {
-                    if (!paragraph.isEmpty()) {
-                        paragraph.append(System.lineSeparator());
-                    }
-                    paragraph.append(line);
-                }
-            }
-            if (!paragraph.isEmpty()) {
-                output.append(Md2Html(paragraph));
-            }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, StandardCharsets.UTF_8))) {
-                writer.write(output.toString());
+                StringBuilder paragraph = new StringBuilder();
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    if (!line.isEmpty()) {
+                        if (!paragraph.isEmpty()) {
+                            paragraph.append(System.lineSeparator());
+                        }
+                        paragraph.append(line);
+                    }
+                    if (!paragraph.isEmpty() && (line.isEmpty() || !scanner.hasNextLine())) {
+                        writer.append(md2Htmls(paragraph).append(System.lineSeparator()));
+                        paragraph.setLength(0);
+                    }
+                }
             } catch (IOException e) {
                 System.out.println("Output Error" + e.getMessage());
             }
-
+        } catch (FileNotFoundException e) {
+            System.out.println("inputFile not found" + e.getMessage());
         } catch (IOException e) {
-            System.out.println("InputFile Error" + e.getMessage());
+            System.out.println("Input Error" + e.getMessage());
         }
     }
 
-    public static StringBuilder Md2Html(StringBuilder paragraph) {
+    public static StringBuilder md2Htmls(StringBuilder paragraph) {
         StringBuilder block = new StringBuilder();
-        if (paragraph.charAt(0) != '#') {
-            Paragraph paragraph1 = new Paragraph(parse(paragraph, 0, paragraph.length()));
-            paragraph1.toHtml(block);
+        int levelHeaders = 1;
+        while (levelHeaders < paragraph.length() && paragraph.charAt(levelHeaders) == '#') {
+            levelHeaders++;
+        }
+        if (paragraph.charAt(0) != '#' || (levelHeaders < paragraph.length() && paragraph.charAt(levelHeaders) != ' ')) {
+            Paragraph outputBlockText = new Paragraph(parse(paragraph, 0, paragraph.length()));
+            outputBlockText.toHtml(block);
         } else {
-            int i = 1;
-            int levelHeaders = 1;
-            while (i < paragraph.length() && paragraph.charAt(i) == '#') {
-                i++;
-                levelHeaders++;
-            }
-            if (i < paragraph.length() && paragraph.charAt(i) != ' ') {
-                Paragraph paragraph1 = new Paragraph(parse(paragraph, 0, paragraph.length()));
-                paragraph1.toHtml(block);
-                return block; 
-            }
-            Header paragraph1 = new Header(parse(paragraph, levelHeaders+1, paragraph.length()), levelHeaders);
-            paragraph1.toHtml(block);
+            Header outputBlockText = new Header(parse(paragraph, levelHeaders + 1, paragraph.length()), levelHeaders);
+            outputBlockText.toHtml(block);
         }
         return block;
     }
@@ -80,16 +65,16 @@ public class Md2Html {
         StringBuilder textBuff = new StringBuilder();
         int markerEnd;
         int len;
-        for(int i = start; i < end; i++){
+        for (int i = start; i < end; i++) {
             char ch = paragraph.charAt(i);
-            if (ch == '\\' && (i + 1 < end && htmlTegs.containsKey(paragraph.charAt(i + 1)))) {
+            if (i + 1 < end && ch == '\\' && HTML_TAGS.contains(paragraph.charAt(i + 1))) {
                 textBuff.append(paragraph.charAt(++i));
-                if (i+1 < end && paragraph.charAt(i+1) == ch) {
+                if (i + 1 < end && paragraph.charAt(i + 1) == ch) {
                     textBuff.append(paragraph.charAt(++i));
                 }
                 continue;
             }
-            if (htmlTegs.containsKey(ch)) {
+            if (HTML_TAGS.contains(ch)) {
                 if (!textBuff.isEmpty()) {
                     result.add(new Text(textBuff.toString()));
                     textBuff.setLength(0);
@@ -98,10 +83,14 @@ public class Md2Html {
                 if (i + 1 < end && paragraph.charAt(i + 1) == ch) {
                     len = 2;
                 }
-                markerEnd = findClose(paragraph, i+len, end, ch, len);
-                if (markerEnd != -1 && !(markerEnd > 0 && paragraph.charAt(markerEnd-1) == '\\')) {
+                if ((ch == '!' || ch == '-') && len == 1) {
+                    textBuff.append(ch);
+                    continue;
+                }
+                markerEnd = findClose(paragraph, i + len, end, ch, len);
+                if (markerEnd != -1 && !(markerEnd > 0 && paragraph.charAt(markerEnd - 1) == '\\')) {
                     result.add(returnToMarkupClass(ch, len, paragraph, i + len, markerEnd));
-                    i = markerEnd + len-1;
+                    i = markerEnd + len - 1;
                     continue;
                 }
             }
@@ -112,22 +101,21 @@ public class Md2Html {
         }
         return result;
     }
+
     public static int findClose(StringBuilder text, int start, int end, char marker, int len) {
         for (int i = start; i < end; i++) {
             if (text.charAt(i) != marker) continue;
-            if ((i == end - 1 && len == 2) || (len == 2 && text.charAt(i+1) != marker)) continue;
-            if (i != end -1 && (len < 2 && text.charAt(i+1) == marker && htmlTegs.get(marker).length() >= 2)) {
-                if (findClose(text, start, end, marker, 2) == -1) return i;
+            if ((i == end - 1 && len == 2) || (len == 2 && text.charAt(i + 1) != marker)) continue;
+            if (i != end - 1 && (len < 2 && text.charAt(i + 1) == marker && marker != '`')) {
                 i++;
                 continue;
             }
-            if (len == 2 && text.charAt(i) == marker) return i;
             return i;
         }
         return -1;
     }
 
-    public static ToMarkup returnToMarkupClass(char marker, int len, StringBuilder text, int start, int end){
+    public static ToMarkup returnToMarkupClass(char marker, int len, StringBuilder text, int start, int end) {
         if (marker == '*' || marker == '_') {
             if (len == 2) {
                 return new Strong(parse(text, start, end));
@@ -136,7 +124,7 @@ public class Md2Html {
             }
         }
         if (marker == '-' && len == 2) {
-                return new Strikeout(parse(text, start, end));
+            return new Strikeout(parse(text, start, end));
         }
         if (marker == '`' && len == 1) {
             return new Code(parse(text, start, end));
@@ -144,10 +132,6 @@ public class Md2Html {
         if (marker == '!' && len == 2) {
             return new Example(parse(text, start, end));
         }
-        if (marker == '!' && len == 1) {
-            return new Text(text.substring(start-1, end+1));
-        }
         return new Text(text.substring(start, end));
     }
-
 }
