@@ -1,5 +1,6 @@
-package Prog_INTRO.Reverse;
+package Prog_intro.Reverse;
 
+import Prog_intro.Scanner.*;
 import java.io.IOException;
 import java.util.Arrays;
 
